@@ -4,93 +4,22 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  ADMIN
-  STAFF
-}
-
-enum AdminRole {
-  REGULAR_ADMIN
-  SENIOR_ADMIN
-}
-
-enum WorkflowState {
-  DRAFT
-  PENDING_APPROVAL
-  PUBLISHED
-  REJECTED
-}
-
-enum CustomerType {
-  B2C
-  B2B
-}
-
-enum DeliveryOption {
-  DELIVERY
-  PICKUP
-}
-
-enum DeliverySlot {
-  MORNING
-  MIDDAY
-  END_OF_DAY
-}
-
-enum OrderStatus {
-  PENDING
-  CONFIRMED
-  PROCESSING
-  DELIVERED
-  CANCELLED
-}
-
-enum PreOrderStatus {
-  QUEUED
-  FULFILLED
-  CANCELLED
-}
-
-enum ReservationType {
-  B2B_CART
-  ORDER_PAID
-}
-
-enum AuditAction {
-  CREATE
-  UPDATE
-  DELETE
-  APPROVE
-  REJECT
-  SUBMIT
-}
-
-enum NotificationType {
-  APPROVAL_REQUIRED
-  LOW_STOCK
-  CONCURRENT_EDIT
-  PREORDER_FULFILLED
-}
-
-enum AnnouncementType {
-  BANNER
-  POPUP
-  BOTH
-}
+// SQLite does not support enums — all enum fields are stored as String
+// SQLite does not support Json  — all Json  fields are stored as String (JSON-serialized)
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
+  id        String   @id @default(cuid())
+  email     String   @unique
   password  String
   name      String
-  role      Role      @default(STAFF)
-  adminRole AdminRole @default(REGULAR_ADMIN)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  role      String   @default("STAFF")       // Role: ADMIN | STAFF
+  adminRole String   @default("REGULAR_ADMIN") // AdminRole: REGULAR_ADMIN | SENIOR_ADMIN
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   auditLogs     AuditLog[]
   notifications AdminNotification[]
@@ -119,13 +48,13 @@ model Product {
   quantity          Int
   unit              String
   imageUrl          String
-  images            Json             @default("[]")
+  images            String           @default("[]") // Json stored as String
   categoryId        String
   category          Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   isSeasonal        Boolean          @default(false)
   isAvailable       Boolean          @default(true)
   lowStockThreshold Int              @default(10)
-  workflowState     WorkflowState    @default(DRAFT)
+  workflowState     String           @default("DRAFT") // WorkflowState: DRAFT | PENDING_APPROVAL | PUBLISHED | REJECTED
   rejectionNotes    String?
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
@@ -163,14 +92,14 @@ model ProductVariant {
 }
 
 model Announcement {
-  id        String           @id @default(cuid())
+  id        String    @id @default(cuid())
   title     String
   message   String
-  type      AnnouncementType @default(BANNER)
-  isActive  Boolean          @default(true)
+  type      String    @default("BANNER") // AnnouncementType: BANNER | POPUP | BOTH
+  isActive  Boolean   @default(true)
   expiresAt DateTime?
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("announcements")
 }
@@ -203,22 +132,22 @@ model HarvestCalendar {
 }
 
 model OrderRequest {
-  id              String         @id @default(cuid())
+  id              String    @id @default(cuid())
   customerName    String
   customerPhone   String
   customerEmail   String?
-  customerType    CustomerType
-  deliveryOption  DeliveryOption
-  deliverySlot    DeliverySlot?
+  customerType    String    // CustomerType: B2C | B2B
+  deliveryOption  String    // DeliveryOption: DELIVERY | PICKUP
+  deliverySlot    String?   // DeliverySlot: MORNING | MIDDAY | END_OF_DAY
   deliveryDate    DateTime?
   deliveryAddress String?
   notes           String?
-  status          OrderStatus    @default(PENDING)
+  status          String    @default("PENDING") // OrderStatus: PENDING | CONFIRMED | PROCESSING | DELIVERED | CANCELLED
   totalAmount     Float
-  deliveryFee     Float          @default(0)
+  deliveryFee     Float     @default(0)
   adminNotes      String?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   items           OrderItem[]
 
   @@index([status])
@@ -228,16 +157,16 @@ model OrderRequest {
 }
 
 model OrderItem {
-  id             String          @id @default(cuid())
+  id             String         @id @default(cuid())
   orderRequestId String
-  orderRequest   OrderRequest    @relation(fields: [orderRequestId], references: [id], onDelete: Cascade)
+  orderRequest   OrderRequest   @relation(fields: [orderRequestId], references: [id], onDelete: Cascade)
   productId      String?
-  product        Product?        @relation(fields: [productId], references: [id])
+  product        Product?       @relation(fields: [productId], references: [id])
   variantId      String?
   variant        ProductVariant? @relation(fields: [variantId], references: [id])
   quantity       Int
   price          Float
-  createdAt      DateTime        @default(now())
+  createdAt      DateTime       @default(now())
 
   @@index([orderRequestId])
   @@index([productId])
@@ -252,7 +181,7 @@ model PreOrder {
   customerEmail String
   customerName  String
   quantity      Int
-  status        PreOrderStatus @default(QUEUED)
+  status        String         @default("QUEUED") // PreOrderStatus: QUEUED | FULFILLED | CANCELLED
   queuePosition Int
   createdAt     DateTime       @default(now())
   fulfilledAt   DateTime?
@@ -263,14 +192,14 @@ model PreOrder {
 }
 
 model InventoryReservation {
-  id            String          @id @default(cuid())
+  id            String         @id @default(cuid())
   variantId     String
-  variant       ProductVariant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  variant       ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
   quantity      Int
   customerEmail String
-  type          ReservationType
+  type          String         // ReservationType: B2B_CART | ORDER_PAID
   expiresAt     DateTime
-  createdAt     DateTime        @default(now())
+  createdAt     DateTime       @default(now())
 
   @@index([variantId])
   @@index([expiresAt])
@@ -278,14 +207,14 @@ model InventoryReservation {
 }
 
 model AuditLog {
-  id         String      @id @default(cuid())
+  id         String   @id @default(cuid())
   adminId    String
-  admin      User        @relation(fields: [adminId], references: [id])
+  admin      User     @relation(fields: [adminId], references: [id])
   entityType String
   entityId   String
-  action     AuditAction
-  changes    Json
-  timestamp  DateTime    @default(now())
+  action     String   // AuditAction: CREATE | UPDATE | DELETE | APPROVE | REJECT | SUBMIT
+  changes    String   // Json stored as String
+  timestamp  DateTime @default(now())
 
   @@index([adminId])
   @@index([entityType, entityId])
@@ -294,14 +223,14 @@ model AuditLog {
 }
 
 model AdminNotification {
-  id        String           @id @default(cuid())
+  id        String    @id @default(cuid())
   adminId   String?
-  admin     User?            @relation(fields: [adminId], references: [id])
-  type      NotificationType
+  admin     User?     @relation(fields: [adminId], references: [id])
+  type      String    // NotificationType: APPROVAL_REQUIRED | LOW_STOCK | CONCURRENT_EDIT | PREORDER_FULFILLED
   message   String
-  metadata  Json?
-  isRead    Boolean          @default(false)
-  createdAt DateTime         @default(now())
+  metadata  String?   // Json stored as String
+  isRead    Boolean   @default(false)
+  createdAt DateTime  @default(now())
 
   @@index([adminId, isRead])
   @@index([createdAt])

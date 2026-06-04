@@ -133,11 +133,10 @@ export default async function ProductsPage({
                 <h3 className="font-serif font-semibold text-sm tracking-wider uppercase text-luxury-charcoal mb-4">
                   Sort By
                 </h3>
-                <form method="GET" action="/products" id="sortForm">
+                <form method="GET" action="/products" id="sortForm" className="flex flex-col gap-3">
                   <select
                     name="sort"
                     defaultValue={sort || 'newest'}
-                    onChange={(e) => (e.target.form as HTMLFormElement)?.submit()}
                     className="input-field text-sm"
                   >
                     <option value="newest">Newest First</option>
@@ -150,6 +149,9 @@ export default async function ProductsPage({
                   {searchQuery && <input type="hidden" name="search" value={searchQuery} />}
                   {minPrice && <input type="hidden" name="minPrice" value={minPrice} />}
                   {maxPrice && <input type="hidden" name="maxPrice" value={maxPrice} />}
+                  <button type="submit" className="btn-secondary w-full text-xs py-2">
+                    Sort
+                  </button>
                 </form>
               </div>
 

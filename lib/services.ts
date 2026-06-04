@@ -1,5 +1,8 @@
 import { prisma } from '@/lib/prisma';
-import { Prisma, WorkflowState, AuditAction } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+
+// Enum value types (kept as plain strings for SQLite compatibility)
+type AuditAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'APPROVE' | 'REJECT' | 'SUBMIT';
 
 // ===== PRODUCT VARIANT SERVICE (Task 3.1) =====
 
@@ -310,7 +313,7 @@ export async function logAction(
       entityType,
       entityId,
       action,
-      changes,
+      changes: JSON.stringify(changes),
     },
   });
 }
@@ -356,7 +359,7 @@ export async function createNotification(
     data: {
       type,
       message,
-      metadata: metadata || {},
+      metadata: metadata ? JSON.stringify(metadata) : null,
       adminId: adminId || null,
     },
   });
