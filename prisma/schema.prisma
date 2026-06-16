@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -43,19 +43,19 @@ model Product {
   id                String           @id @default(cuid())
   name              String
   slug              String           @unique
-  description       String
+  description       String           @db.Text
   price             Float
   quantity          Int
   unit              String
   imageUrl          String
-  images            String           @default("[]") // Json stored as String
+  images            String           @default("[]") @db.Text // Json stored as String
   categoryId        String
   category          Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   isSeasonal        Boolean          @default(false)
   isAvailable       Boolean          @default(true)
   lowStockThreshold Int              @default(10)
   workflowState     String           @default("DRAFT") // WorkflowState: DRAFT | PENDING_APPROVAL | PUBLISHED | REJECTED
-  rejectionNotes    String?
+  rejectionNotes    String?          @db.Text
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   orderItems        OrderItem[]
@@ -94,7 +94,7 @@ model ProductVariant {
 model Announcement {
   id        String    @id @default(cuid())
   title     String
-  message   String
+  message   String    @db.Text
   type      String    @default("BANNER") // AnnouncementType: BANNER | POPUP | BOTH
   isActive  Boolean   @default(true)
   expiresAt DateTime?
@@ -107,7 +107,7 @@ model Announcement {
 model Testimonial {
   id        String   @id @default(cuid())
   name      String
-  content   String
+  content   String   @db.Text
   rating    Int      @default(5)
   location  String?
   imageUrl  String?
@@ -124,7 +124,7 @@ model HarvestCalendar {
   startMonth  Int
   endMonth    Int
   year        Int?
-  description String?
+  description String?  @db.Text
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -140,12 +140,12 @@ model OrderRequest {
   deliveryOption  String    // DeliveryOption: DELIVERY | PICKUP
   deliverySlot    String?   // DeliverySlot: MORNING | MIDDAY | END_OF_DAY
   deliveryDate    DateTime?
-  deliveryAddress String?
-  notes           String?
+  deliveryAddress String?          @db.Text
+  notes           String?          @db.Text
   status          String    @default("PENDING") // OrderStatus: PENDING | CONFIRMED | PROCESSING | DELIVERED | CANCELLED
   totalAmount     Float
   deliveryFee     Float     @default(0)
-  adminNotes      String?
+  adminNotes      String?          @db.Text
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   items           OrderItem[]
@@ -213,7 +213,7 @@ model AuditLog {
   entityType String
   entityId   String
   action     String   // AuditAction: CREATE | UPDATE | DELETE | APPROVE | REJECT | SUBMIT
-  changes    String   // Json stored as String
+  changes    String   @db.Text // Json stored as String
   timestamp  DateTime @default(now())
 
   @@index([adminId])
@@ -227,8 +227,8 @@ model AdminNotification {
   adminId   String?
   admin     User?     @relation(fields: [adminId], references: [id])
   type      String    // NotificationType: APPROVAL_REQUIRED | LOW_STOCK | CONCURRENT_EDIT | PREORDER_FULFILLED
-  message   String
-  metadata  String?   // Json stored as String
+  message   String    @db.Text
+  metadata  String?   @db.Text // Json stored as String
   isRead    Boolean   @default(false)
   createdAt DateTime  @default(now())
 

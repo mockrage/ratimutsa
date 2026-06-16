@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     session.email = user.email;
     session.name = user.name;
     session.role = user.role;
-    session.adminRole = user.adminRole;
+    session.adminRole = user.adminRole as 'REGULAR_ADMIN' | 'SENIOR_ADMIN' | undefined;
     session.isLoggedIn = true;
     await session.save();
 

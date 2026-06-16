@@ -42,18 +42,18 @@ export default async function HomePage() {
     <>
       <AnnouncementBanner />
       <Header />
-      
+
       <main>
         {/* ===== HERO SECTION ===== */}
         <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
           {/* Background Image Slideshow with Overlay */}
           <HeroSlideshow />
           <div className="absolute inset-0 pattern-overlay opacity-10 z-0" />
-          
+
           {/* Decorative elements */}
           <div className="absolute top-20 right-20 w-64 h-64 bg-luxury-garden-lime/10 rounded-full blur-3xl animate-float" />
           <div className="absolute bottom-20 left-20 w-96 h-96 bg-luxury-windsor-oak/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }} />
-          
+
           <div className="relative z-10 container mx-auto px-6 lg:px-12">
             <div className="max-w-4xl mx-auto text-center">
               {/* Elegant pre-title */}
@@ -64,7 +64,7 @@ export default async function HomePage() {
                 </span>
                 <span className="h-px w-12 bg-luxury-windsor-oak" />
               </div>
-              
+
               <h1 className="animate-reveal-delay-1 text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white mb-8 leading-[0.95] tracking-tight">
                 From Our Fields,
                 <br />
@@ -72,13 +72,13 @@ export default async function HomePage() {
                   To Your Table
                 </span>
               </h1>
-              
+
               <p className="animate-reveal-delay-2 text-lg md:text-xl text-gray-300 font-light mb-12 max-w-2xl mx-auto leading-relaxed">
-                Experience the finest farm-fresh produce — premium broilers, 
-                farm eggs, organic vegetables — cultivated with care and delivered 
+                Experience the finest farm-fresh produce — premium broilers,
+                farm eggs, organic vegetables — cultivated with care and delivered
                 with pride by Ratimutsa Farm.
               </p>
-              
+
               <div className="animate-reveal-delay-3 flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/products" className="btn-primary bg-white text-luxury-forest-green border-white hover:bg-transparent hover:text-white">
                   Explore Products
@@ -179,7 +179,7 @@ export default async function HomePage() {
                       />
                       {/* Overlay on hover */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                      
+
                       {/* Badges */}
                       <div className="absolute top-4 left-4 flex flex-col gap-2">
                         {product.isSeasonal && (
@@ -194,7 +194,7 @@ export default async function HomePage() {
                         </span>
                       </div>
                     </div>
-                    
+
                     <div className="p-6">
                       <span className="text-[10px] tracking-[0.2em] uppercase font-sans font-medium text-luxury-windsor-oak">
                         {product.category.name}
@@ -267,8 +267,8 @@ export default async function HomePage() {
                     Farm Fresh Heritage Eggs
                   </h3>
                   <p className="text-gray-500 font-light leading-relaxed mb-8 text-lg">
-                    Our free-range hens are raised with the highest welfare standards, 
-                    resulting in eggs with vibrant yolks and rich flavor. Collected 
+                    Our free-range hens are raised with the highest welfare standards,
+                    resulting in eggs with vibrant yolks and rich flavor. Collected
                     daily and delivered within 24 hours for unparalleled freshness.
                   </p>
                   <Link href="/products?category=poultry" className="btn-luxury inline-flex">
@@ -283,7 +283,7 @@ export default async function HomePage() {
                   <div className="relative group">
                     <div className="aspect-[4/3] overflow-hidden rounded-sm shadow-2xl">
                       <Image
-                        src="/images/farm-vegetables.png"
+                        src="/images/farmpage.jpg"
                         alt="Organic Vegetables"
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -308,8 +308,8 @@ export default async function HomePage() {
                     Pesticide-Free Vegetables
                   </h3>
                   <p className="text-gray-500 font-light leading-relaxed mb-8 text-lg">
-                    Cultivated in nutrient-rich soil using traditional organic methods. 
-                    From crisp greens to sun-ripened tomatoes, every harvest is a 
+                    Cultivated in nutrient-rich soil using traditional organic methods.
+                    From crisp greens to sun-ripened tomatoes, every harvest is a
                     testament to our commitment to nature and your health.
                   </p>
                   <Link href="/products?category=vegetables" className="btn-luxury inline-flex">
@@ -388,18 +388,18 @@ export default async function HomePage() {
                   <div key={testimonial.id} className="card-luxury p-8">
                     {/* Quote mark */}
                     <div className="text-4xl font-serif text-luxury-windsor-oak/20 mb-4 leading-none">“</div>
-                    
+
                     {/* Rating */}
                     <div className="flex items-center gap-1 mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 text-luxury-windsor-oak fill-luxury-windsor-oak" />
                       ))}
                     </div>
-                    
+
                     <p className="text-gray-600 font-light leading-relaxed mb-6 italic">
                       &ldquo;{testimonial.content}&rdquo;
                     </p>
-                    
+
                     <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                       <div className="w-10 h-10 bg-luxury-forest-green/10 rounded-full flex items-center justify-center">
                         <span className="text-luxury-forest-green font-serif font-bold text-sm">
@@ -426,7 +426,7 @@ export default async function HomePage() {
         <section className="relative py-24 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-luxury-forest-green via-luxury-forest-green to-luxury-charcoal" />
           <div className="absolute inset-0 pattern-overlay opacity-10" />
-          
+
           <div className="relative z-10 container mx-auto px-6 lg:px-12 text-center">
             <span className="text-luxury-windsor-oak text-xs tracking-[0.4em] uppercase font-sans font-medium">
               Start Ordering
@@ -435,11 +435,11 @@ export default async function HomePage() {
               Ready for Premium,<br />Farm-Fresh Produce?
             </h2>
             <p className="text-gray-300 font-light text-lg mb-10 max-w-xl mx-auto">
-              Browse our curated selection of the finest agricultural products 
+              Browse our curated selection of the finest agricultural products
               and experience the Ratimutsa difference.
             </p>
-            <Link 
-              href="/products" 
+            <Link
+              href="/products"
               className="btn-luxury bg-white text-luxury-forest-green border-white hover:bg-transparent hover:text-white inline-flex"
             >
               Order Our Collection

@@ -45,8 +45,8 @@ async function createDeployment() {
     // Copy package.json
     execSync(`powershell -Command "Copy-Item -Path 'package.json' -Destination '${standaloneDir}/package.json' -Force"`);
 
-    // Also copy server.js into standalone folder to keep it self-contained
-    execSync(`powershell -Command "Copy-Item -Path 'server.js' -Destination '${standaloneDir}/server.js' -Force"`);
+    // Also copy server.js into standalone folder as cpanel-server.js to keep it self-contained without overwriting Next.js server
+    execSync(`powershell -Command "Copy-Item -Path 'server.js' -Destination '${standaloneDir}/cpanel-server.js' -Force"`);
 
     if (skipZip) {
       console.log('\n--- SUCCESS: Git-Ready Standalone Folder Prepared ---');

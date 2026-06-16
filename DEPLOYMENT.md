@@ -38,11 +38,11 @@ This script will:
 4. **Grant Permissions:** Add the user to the database with **ALL PRIVILEGES**.
 
 ### 2. Build your Database URL
-Format: `mysql://DB_USER:DB_PASSWORD@localhost:3306/DB_NAME`
+Format: `mysql://mylama_adminstrator:RatimutsaFarm@localhost:3306/mylamaka_ratimutsa`
 
 Example:
 ```env
-DATABASE_URL="mysql://ratimuts_dbuser:MyStrongPass123!@localhost:3306/ratimuts_appdb"
+DATABASE_URL="mysql://mylama_adminstrator:RatimutsaFarm@localhost:3306/mylamaka_ratimutsa"
 ```
 
 ---
@@ -63,7 +63,7 @@ The ZIP does NOT include a `.env` file (for security). You must create one manua
 
 ```env
 # Database - MySQL (cPanel)
-DATABASE_URL="mysql://YOUR_DB_USER:YOUR_DB_PASSWORD@localhost:3306/YOUR_DB_NAME"
+DATABASE_URL="mysql://mylama_adminstrator:RatimutsaFarm@localhost:3306/mylamaka_ratimutsa"
 
 # Session Secret (generate a unique string)
 SESSION_SECRET="YOUR_GENERATED_SECRET_HERE"
@@ -96,7 +96,7 @@ NEXT_PUBLIC_FACEBOOK="Ratimutsa Farms"
 4. **Application mode:** Set to `production`.
 5. **Application root:** Enter the path to your extracted folder.
 6. **Application URL:** Select your domain from the dropdown.
-7. **Application startup file:** Type `server.js`.
+9. **Application startup file:** Type `cpanel-server.js`.
 8. Click **Create**.
 9. **DO NOT click "Run NPM Install"** -- all modules are pre-packaged in the ZIP.
 
@@ -115,7 +115,7 @@ This creates all tables in your MySQL database based on the Prisma schema.
 To seed the database with sample data (optional, recommended for first setup):
 ```bash
 npx prisma generate
-npx tsx prisma/seed.ts
+npx ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed.ts
 ```
 
 **Important:** After seeding, immediately change the default admin password by logging into the admin panel at `/admin/login` with:
